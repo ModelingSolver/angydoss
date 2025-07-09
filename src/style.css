@@ -1,0 +1,58 @@
+body {
+  font-family: 'Share Tech Mono', monospace;
+  margin: 0;
+  overflow: hidden;
+  background: url('https://s1.qwant.com/thumbr/474x481/b/b/b16227820e7644c082a2dfe91b4a0acde4d53310f0f248aae666e11d51b7d3/OIP.hTBf-kD9pxjDOP2i690rTwHaHh.jpg?u=https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FOIP.hTBf-kD9pxjDOP2i690rTwHaHh%3Fr%3D0%26cb%3Dthvnextc1%26pid%3DApi&q=0&b=1&p=0&a=0') no-repeat center top / cover;
+  
+  position: relative;
+  background-position: center -500px ;
+  font-family: 'Press Start 2P', cursive;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#accueil {
+  text-align: center;
+  margin-top: 100px;
+   flex-grow: 1;
+}
+
+h1 {
+  font-size: 56px;
+  color: #ffffff;
+  text-shadow: 2px 2px #000;
+}
+
+p {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px #000;
+}
+
+#start, #quit {
+  width: 100px;
+  height: 50px;
+  font-size: 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative; /* ou absolute??? */
+  top: 10vh; 
+
+}
+
+
+
+#start:hover, #quit:hover {
+  background-color: #ccc;
+}
+
+
+footer {
+  text-align: center;
+  padding: 10px;
+}

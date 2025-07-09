@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  font-family: Arial, sans-serif;
+}
+
+#game-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+#video {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+}
+
+
+#hero {
+  position: relative;
+  /*overflow: hidden;*/
+  background-clip: text;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*clip-path: padding-box circle(50px at 0 100px);
+  /*clip-path: circle(80% at center); */
+  cursor: grab;
+  user-select: none;
+  z-index: 1000;
+}
+
+
+
+.coeur {
+  position: absolute;
+  font-size: 50px; 
+  clip-path: circle(40% at center);                
+  cursor: pointer;
+  user-select: none;
+  z-index: 10;
+}
+
+#chrono {
+  font-size: 48px;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-family: monospace;
+  z-index: 10;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+  margin-top: 30vh;
+}
