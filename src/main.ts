@@ -1,6 +1,4 @@
-// TypeScript Game Logic
-
-// Activation son au premier clic
+// FOND VIDEO Activation son au premier clic:
 function activerSon(): void {
   const iframe = document.getElementById('video') as HTMLIFrameElement | null;
   if (!iframe) return;
@@ -17,7 +15,7 @@ document.addEventListener('click', activerSon);
 document.addEventListener('touchstart', activerSon);
 
 
-// Variables globales
+// VARIABLES
 const hero = document.getElementById('hero') as HTMLElement;
 const heroEmojis: string[] = ['😠', '😑', '😃'];
 let heroIndex = 0;
@@ -55,8 +53,7 @@ class Coeur {
     this.element.style.top = `${this.y}px`;
 
     this.element.addEventListener('click', () => {
-      this.element.remove();
-      coeurs = coeurs.filter(c => c !== this);
+      removeCoeur(this);
       if (coeurs.length === 0) niveauSuivant();
     });
   }
@@ -76,7 +73,19 @@ class Coeur {
 }
 
 
-// Fonctions principales
+// évite les doublons, garde le jeu propre:
+function removeCoeur(coeur: Coeur): void {
+  coeur.element.remove();
+  coeurs = coeurs.filter(c => c !== coeur);
+}
+//Nettoyage des intervalles actifs (déplacement, collision, etc.):
+function clearGameIntervals(): void {
+  gameIntervals.forEach(id => clearInterval(id));
+  gameIntervals = [];
+}
+
+
+// Fonctions creer Coeurs & Deplacement Coeurs:
 function creerCoeurs(n: number): void {
   coeurs.forEach(c => c.element.remove());
   coeurs = [];
@@ -89,6 +98,51 @@ function deplacerCoeurs(): void {
   coeurs.forEach(c => c.deplacer());
 }
 
+
+// MOUVEMENT HERO:
+function addHeroMovement(): void {
+  let isDragging = false;
+  hero.style.position = 'absolute';
+  hero.style.width = '80px';
+  hero.style.height = '80px';
+
+  hero.addEventListener('mousedown', startDrag);
+  document.addEventListener('mouseup', stopDrag);
+  document.addEventListener('mousemove', dragHero);
+
+  function startDrag() {
+    isDragging = true;
+    hero.style.cursor = 'grabbing';
+  }
+
+  function stopDrag() {
+    isDragging = false;
+    hero.style.cursor = 'grab';
+  }
+
+  function dragHero(event: MouseEvent) {
+    if (!isDragging) return;
+
+    const offsetX = hero.offsetWidth * 0.5;
+    const offsetY = hero.offsetHeight * 0.5;
+
+    let newX = event.clientX - offsetX;
+    let newY = event.clientY - offsetY;
+
+    const maxWidth = window.innerWidth - hero.offsetWidth;
+    const maxHeight = window.innerHeight - hero.offsetHeight;
+
+    if (newX < -12) newX = -12;
+    if (newX > maxWidth - 40) newX = maxWidth - 40;
+    if (newY < -20) newY = -20;
+    if (newY > maxHeight - 42) newY = maxHeight - 42;
+
+    hero.style.left = `${newX}px`;
+    hero.style.top = `${newY}px`;
+  }
+}
+
+//COLLISIONS:
 function detecterCollisions(): void {
   coeurs.forEach((coeur) => {
     const heroRect = hero.getBoundingClientRect();
@@ -101,8 +155,7 @@ function detecterCollisions(): void {
       heroRect.y + heroRect.height > coeurRect.y;
 
     if (collision) {
-      coeur.element.remove();
-      coeurs = coeurs.filter(c => c !== coeur);
+      removeCoeur(coeur);
 
       heroIndex = (heroIndex + 1) % heroEmojis.length;
       hero.textContent = heroEmojis[heroIndex];
@@ -117,15 +170,9 @@ function detecterCollisions(): void {
   });
 }
 
-function clearGameIntervals(): void {
-  gameIntervals.forEach(id => clearInterval(id));
-  gameIntervals = [];
-}
-
+//NEXT LVL:
 function niveauSuivant(): void {
-  clearGameIntervals();
   niveau++;
-
   const levelScreen = document.getElementById('level-screen')!;
   levelScreen.style.display = 'block';
 
@@ -135,20 +182,15 @@ function niveauSuivant(): void {
   }, 2000);
 }
 
+//GAME OVER:
 function gameOver(): void {
-  clearGameIntervals();
   window.location.href = './src/gameOver.html';
 }
 
-function startGame(): void {
-  creerCoeurs(5 * niveau);
-  chrono = 5;
-  heroIndex = 0;
-  hero.textContent = heroEmojis[heroIndex];
-  hero.style.fontSize = '100px';
-  hero.style.display = 'block';
-
+//TIMER:
+function startCountdown(callback: () => void): void {
   const chronoDiv = document.getElementById('chrono')!;
+  chrono = 5;
   chronoDiv.textContent = chrono.toString();
 
   if (timer) clearInterval(timer);
@@ -157,11 +199,23 @@ function startGame(): void {
     chronoDiv.textContent = chrono.toString();
     if (chrono === 0) {
       clearInterval(timer);
-      jeu();
+      callback();
     }
   }, 1000);
 }
 
+//START GAME:
+function startGame(): void {
+  creerCoeurs(5 * niveau);
+  heroIndex = 0;
+  hero.textContent = heroEmojis[heroIndex];
+  hero.style.fontSize = '100px';
+  hero.style.display = 'block';
+
+  startCountdown(jeu);
+}
+
+//DEPLACEMENT COEURS ET COLLISIONS:
 function jeu(): void {
   clearGameIntervals();
   gameIntervals.push(setInterval(deplacerCoeurs, 16));
@@ -169,45 +223,7 @@ function jeu(): void {
 }
 
 
-// Mouvement du héros
-function addHeroMovement(): void {
-  let isDragging = false;
-  hero.style.position = 'absolute';
-  hero.style.width = '80px';
-  hero.style.height = '80px';
-
-  hero.addEventListener('mousedown', () => {
-    isDragging = true;
-    hero.style.cursor = 'grabbing';
-  });
-
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    hero.style.cursor = 'grab';
-  });
-
-  document.addEventListener('mousemove', (event) => {
-    const maxWidth = window.innerWidth - hero.offsetWidth;
-    const maxHeight = window.innerHeight - hero.offsetHeight;
-
-    if (isDragging) {
-      const offsetX = hero.offsetWidth * 0.5;
-      const offsetY = hero.offsetHeight * 0.5;
-      let newX = event.clientX - offsetX;
-      let newY = event.clientY - offsetY;
-
-      if (newX < -12) newX = -12;
-      if (newX > maxWidth - 40) newX = maxWidth - 40;
-      if (newY < -20) newY = -20;
-      if (newY > maxHeight - 42) newY = maxHeight - 42;
-
-      hero.style.left = `${newX}px`;
-      hero.style.top = `${newY}px`;
-    }
-  });
-}
-
-
 // Game Loop
 addHeroMovement();
 startGame();
+
