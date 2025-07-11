@@ -67,8 +67,8 @@ class Coeur {
 
     const rect = (document.getElementById('game-container') as HTMLElement).getBoundingClientRect();
 
-    if (this.x <= 0 || this.x >= rect.width - 10) this.vx *= -1;
-    if (this.y <= 0 || this.y >= rect.height - 50) this.vy *= -1;
+    if (this.x <= -10 || this.x >= rect.width - 55) this.vx *= -1;
+    if (this.y <= -10 || this.y >= rect.height - 50) this.vy *= -1;
 
     this.element.style.left = `${this.x}px`;
     this.element.style.top = `${this.y}px`;
@@ -137,7 +137,7 @@ function niveauSuivant(): void {
 
 function gameOver(): void {
   clearGameIntervals();
-  window.location.href = 'gameover.html';
+  window.location.href = './src/gameOver.html';
 }
 
 function startGame(): void {
@@ -198,7 +198,7 @@ function addHeroMovement(): void {
 
       if (newX < -12) newX = -12;
       if (newX > maxWidth - 40) newX = maxWidth - 40;
-      if (newY < 21) newY = 21;
+      if (newY < -20) newY = -20;
       if (newY > maxHeight - 42) newY = maxHeight - 42;
 
       hero.style.left = `${newX}px`;
@@ -208,6 +208,6 @@ function addHeroMovement(): void {
 }
 
 
-// Initialisation
+// Game Loop
 addHeroMovement();
 startGame();
